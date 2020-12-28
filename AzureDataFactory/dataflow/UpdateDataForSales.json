@@ -1,0 +1,32 @@
+{
+	"name": "UpdateDataForSales",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SourceSales",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "InputSales",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Filter1"
+				}
+			],
+			"script": "source(output(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer,\n\t\tprice as decimal(18,2),\n\t\tcost as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nsource1 filter(toDate(datetime)==addDays(toDate(currentUTC()),-1)) ~> Filter1\nFilter1 sink(input(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer,\n\t\tprice as decimal(18,2),\n\t\tcost as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tid,\n\t\tdatetime,\n\t\tproduct_id,\n\t\tshop_id,\n\t\tqnty,\n\t\tprice,\n\t\tcost\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1"
+		}
+	}
+}

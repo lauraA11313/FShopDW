@@ -1,0 +1,25 @@
+{
+	"name": "triggerUpdateTables",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "UpdateAndEvaluatePipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2020-12-30T01:03:00Z",
+				"endTime": "2020-12-31T01:03:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

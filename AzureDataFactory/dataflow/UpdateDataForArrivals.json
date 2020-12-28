@@ -1,0 +1,32 @@
+{
+	"name": "UpdateDataForArrivals",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SourceArrivals",
+						"type": "DatasetReference"
+					},
+					"name": "ArrivalsToFilter"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "InputArrivals",
+						"type": "DatasetReference"
+					},
+					"name": "addNewDatestoArrivals"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Filter1ByDate"
+				}
+			],
+			"script": "source(output(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ArrivalsToFilter\nArrivalsToFilter filter(toDate(datetime)==addDays(toDate(currentUTC()),-1)) ~> Filter1ByDate\nFilter1ByDate sink(input(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> addNewDatestoArrivals"
+		}
+	}
+}

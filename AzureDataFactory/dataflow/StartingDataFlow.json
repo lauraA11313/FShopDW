@@ -1,0 +1,85 @@
+{
+	"name": "StartingDataFlow",
+	"properties": {
+		"description": "Copies all tables if datasets on local server are empty",
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SourceArrivals",
+						"type": "DatasetReference"
+					},
+					"name": "ArrivalsSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "SourceCategories",
+						"type": "DatasetReference"
+					},
+					"name": "CategoriesSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "SourceProducts",
+						"type": "DatasetReference"
+					},
+					"name": "sourceProducts"
+				},
+				{
+					"dataset": {
+						"referenceName": "SourceSales",
+						"type": "DatasetReference"
+					},
+					"name": "SalesSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "SourceShops",
+						"type": "DatasetReference"
+					},
+					"name": "ShopsSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "InputArrivals",
+						"type": "DatasetReference"
+					},
+					"name": "sinkArrivals"
+				},
+				{
+					"dataset": {
+						"referenceName": "InputCategories",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCategories"
+				},
+				{
+					"dataset": {
+						"referenceName": "InputProducts",
+						"type": "DatasetReference"
+					},
+					"name": "sinkProducts"
+				},
+				{
+					"dataset": {
+						"referenceName": "InputShops",
+						"type": "DatasetReference"
+					},
+					"name": "sinkShops"
+				},
+				{
+					"dataset": {
+						"referenceName": "InputSales",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSales"
+				}
+			],
+			"transformations": [],
+			"script": "source(output(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ArrivalsSource\nsource(output(\n\t\tid as integer,\n\t\tname as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> CategoriesSource\nsource(output(\n\t\tid as integer,\n\t\tname as string,\n\t\tcategory_id as integer,\n\t\tprice_net as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> sourceProducts\nsource(output(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer,\n\t\tprice as decimal(18,2),\n\t\tcost as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SalesSource\nsource(output(\n\t\tid as integer,\n\t\tname as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> ShopsSource\nArrivalsSource sink(input(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkArrivals\nCategoriesSource sink(input(\n\t\tid as integer,\n\t\tname as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkCategories\nsourceProducts sink(input(\n\t\tid as integer,\n\t\tname as string,\n\t\tcategory_id as integer,\n\t\tprice_net as decimal(18,2)\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkProducts\nShopsSource sink(input(\n\t\tid as integer,\n\t\tname as string\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkShops\nSalesSource sink(input(\n\t\tid as integer,\n\t\tdatetime as timestamp,\n\t\tproduct_id as integer,\n\t\tshop_id as integer,\n\t\tqnty as integer,\n\t\tprice as decimal(18,2),\n\t\tcost as decimal(18,2)\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: true,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sinkSales"
+		}
+	}
+}

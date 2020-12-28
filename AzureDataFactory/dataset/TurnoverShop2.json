@@ -1,0 +1,59 @@
+{
+	"name": "TurnoverShop2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase2",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "AfterSum"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "prodId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "totalSpentOnProdSupply",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "totalItemsBought",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "marginByProd",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "prodSold",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "prodLeftInSupply",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "turnoverCoeff",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 4
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Turnover2"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
