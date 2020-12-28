@@ -163,7 +163,7 @@
 				}
 			},
 			{
-				"name": "EvaluateSales",
+				"name": "dataflow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -183,7 +183,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "EvaluateSales",
+						"referenceName": "dataflow1",
 						"type": "DataFlowReference"
 					},
 					"compute": {
